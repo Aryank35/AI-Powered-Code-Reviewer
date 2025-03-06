@@ -1,6 +1,7 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_KEY);
+
 const model = genAI.getGenerativeModel({
     model: "gemini-2.0-flash",
     systemInstruction: `
@@ -81,12 +82,19 @@ const model = genAI.getGenerativeModel({
 
 
 async function generateContent(prompt) {
-    const result = await model.generateContent(prompt);
+    try {
+        const result = await model.generateContent({ contents: [{ parts: [{ text: prompt }] }] });
 
-    console.log(result.response.text())
+        const response = result.response;  
+        if (!response || !response.candidates || response.candidates.length === 0) {
+            throw new Error("Invalid response from AI API");
+        }
 
-    return result.response.text();
-
+        return response.candidates[0].content.parts[0].text;
+    } catch (error) {
+        console.error("AI API Error:", error);
+        throw error;
+    }
 }
 
-module.exports = generateContent    
+module.exports = { generateContent };
