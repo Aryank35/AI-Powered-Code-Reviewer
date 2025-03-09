@@ -11,19 +11,24 @@ import "../App.css";
 
 function CodeEditor() {
   const navigate = useNavigate();
-  const [code, setCode] = useState(`function sum() { return 1 + 1 }`);
+  const [code, setCode] = useState("function sum() { return 1 + 1 }");
   const [review, setReview] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     prism.highlightAll();
   }, []);
 
   async function reviewCode() {
+    setLoading(true);
     try {
       const response = await axios.post("https://ai-powered-code-reviewer-dj6x.onrender.com/ai/get-review", { code });
       setReview(response.data);
     } catch (error) {
       console.error("Error fetching review:", error);
+      setReview("Failed to fetch review. Please try again.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -51,7 +56,9 @@ function CodeEditor() {
           <div onClick={reviewCode} className="review">Review</div>
         </div>
         <div className="right">
-          <Markdown rehypePlugins={[rehypeHighlight]}>{review}</Markdown>
+          <Markdown rehypePlugins={[rehypeHighlight]}>
+            {loading ? "⏳ Loading review..." : review}
+          </Markdown>
         </div>
       </main>
 
@@ -70,6 +77,18 @@ function CodeEditor() {
           }
           .back-btn:hover {
             background: #666;
+          }
+          .review {
+            margin-top: 10px;
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+          }
+          .review:hover {
+            background: #0056b3;
           }
         `}
       </style>
