@@ -11,7 +11,11 @@ import "../App.css";
 
 function CodeEditor() {
   const navigate = useNavigate();
-  const [code, setCode] = useState("function sum() { return 1 + 1 }");
+  const [code, setCode] = useState(`
+    function sum() { return 1 + 1 }
+    const Sum = sum();
+    console.log(Sum);
+    `);
   const [review, setReview] = useState("");
   const [loading, setLoading] = useState(false);
 
