@@ -24,17 +24,6 @@ const Home = () => {
             Start Now
           </button>
 
-          {/* Search Field */}
-          <div className="search-box">
-            <textarea
-              className="search-input"
-              placeholder="Ask anything..."
-            ></textarea>
-            <button className="search-btn">
-              <i className="fa-solid fa-location-arrow"></i>
-            </button>
-          </div>
-
           <p className="disclaimer">
             <i>CodeAI is here to help, but even AI can make mistakes. The better your code, the better the fix—write smart, debug smarter!</i>
           </p>
